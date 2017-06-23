@@ -13,6 +13,10 @@ To run:
 
 	# docker run -d -p 5672:5672 -p 15672:15672 <username>/rabbitmq:centos7
 
+Define own username and password instead of having it generated:
+
+	# docker run -d -e RABBITMQ_USER=foo -e RABBITMQ_PASS=bar -p 5672:5672 -p 15672:15672 <username>/rabbitmq:centos7
+
 Confirm the RabbitMQ server started:
 
 ```
@@ -56,3 +60,16 @@ Download the rabbitmqadmin tool from the management interface.
 +-------+------------------------------+---------------+
 
 ```
+
+Important note for openshift origin runs:
+
+If you need to directly exec into container pod for debugging reasons, then you should run the following commands before attempting anything:
+
+```
+export HOME="/var/lib/rabbitmq"
+export LD_PRELOAD=libnss_wrapper.so
+export NSS_WRAPPER_PASSWD=/tmp/rabbitmq/passwd
+export NSS_WRAPPER_GROUP=/etc/group
+```
+
+Also, if you are going to have a multi container setup, it is highly recommended that you share /var/lib/rabbitmq between the containers with appropriate permissions.
